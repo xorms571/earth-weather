@@ -12,6 +12,7 @@
     "@react-three/drei": "^10.7.6",
     "@react-three/fiber": "^9.3.0",
     "@types/three": "^0.180.0",
+    "@vis.gl/react-google-maps": "^1.5.5",
     "next": "15.5.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
