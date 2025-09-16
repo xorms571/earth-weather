@@ -25,14 +25,17 @@ function Globe({ onGlobeClick }: { onGlobeClick: (lat: number, lon: number) => v
 
   const handleGlobeClick = (event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation();
-    if (meshRef.current) {
-      const { uv } = event;
-      if (uv) {
-        const lat = -(uv.y - 0.5) * 180;
-        const lon = (uv.x - 0.5) * 360;
-        onGlobeClick(lat, lon);
-      }
-    }
+    // Use the 3D intersection point to calculate lat/lon
+    const { point } = event;
+    const radius = 2; // The radius of our sphere
+
+    // Y is the up-axis, so latitude is derived from the Y coordinate
+    const lat = Math.asin(point.y / radius) * (180 / Math.PI);
+    
+    // Longitude is the angle in the XZ plane
+    const lon = Math.atan2(point.z, point.x) * (180 / Math.PI);
+
+    onGlobeClick(lat, lon);
   };
 
   return (
