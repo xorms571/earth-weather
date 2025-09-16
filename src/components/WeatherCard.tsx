@@ -1,20 +1,5 @@
+import { WeatherData } from '@/types/weather';
 import React from 'react';
-
-// Define the expected structure of the weather data prop
-interface WeatherData {
-  name: string;
-  main: {
-    temp: number;
-    humidity: number;
-  };
-  wind: {
-    speed: number;
-  };
-  weather: {
-    description: string;
-    icon: string;
-  }[];
-}
 
 interface WeatherCardProps {
   weather: WeatherData;

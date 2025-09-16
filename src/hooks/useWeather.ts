@@ -1,20 +1,5 @@
-import { Location } from '@/types/weather';
+import { Location, WeatherData } from '@/types/weather';
 import { useState, useEffect } from 'react';
-
-interface WeatherData {
-  name: string;
-  main: {
-    temp: number;
-    humidity: number;
-  };
-  wind: {
-    speed: number;
-  };
-  weather: {
-    description: string;
-    icon: string;
-  }[];
-}
 
 export const useWeather = (initialLocation: Location) => {
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
