@@ -32,7 +32,6 @@ export function MapSection({
         <APIProvider apiKey={mapsApiKey}>
           <Map
             defaultCenter={location}
-            zoom={4}
             gestureHandling={'auto'}
             onClick={handleMapClick}
             mapId="a2d92f3376276e9d"
