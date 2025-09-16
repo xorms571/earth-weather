@@ -34,7 +34,7 @@ export default function Home() {
   }
 
   return (
-    <main className="w-screen h-screen grid grid-cols-1 md:grid-cols-2 overflow-hidden">
+    <main className="w-screen h-screen grid grid-cols-1 lg:grid-cols-2 overflow-hidden">
       <GlobeSection location={location} />
 
       <MapSection
