@@ -27,7 +27,7 @@ export function MapSection({
   setShowWeatherCard,
 }: MapSectionProps) {
   return (
-    <div className="relative flex items-center justify-center h-[50vh] md:h-screen">
+    <div className="relative flex items-center justify-center h-[50vh] lg:h-screen">
       <div className="w-full h-full pointer-events-auto">
         <APIProvider apiKey={mapsApiKey}>
           <Map

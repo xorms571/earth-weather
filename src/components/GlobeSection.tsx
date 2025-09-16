@@ -46,7 +46,7 @@ interface GlobeSectionProps {
 
 export function GlobeSection({ location }: GlobeSectionProps) {
   return (
-    <div className="relative flex flex-col items-center justify-center p-8 bg-black/20 h-[50vh] md:h-screen">
+    <div className="relative flex flex-col items-center justify-center p-8 bg-black/20 h-[50vh] lg:h-screen">
       <div className="absolute inset-0 z-0">
         <Canvas camera={{ position: [0, 0, 10], fov: 45 }}>
           <Suspense fallback={null}>
