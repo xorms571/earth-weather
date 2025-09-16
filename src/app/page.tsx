@@ -7,27 +7,8 @@ import { APIProvider, Map, MapMouseEvent, AdvancedMarker } from '@vis.gl/react-g
 import { WeatherCard } from '../components/WeatherCard';
 import { gsap } from 'gsap';
 import * as THREE from 'three';
-
-// Define the type for our weather data
-interface WeatherData {
-  name: string;
-  main: {
-    temp: number;
-    humidity: number;
-  };
-  wind: {
-    speed: number;
-  };
-  weather: {
-    description: string;
-    icon: string;
-  }[];
-}
-
-interface Location {
-  lat: number;
-  lng: number;
-}
+import { useWeather } from '../hooks/useWeather';
+import { Location } from '@/types/weather';
 
 // Globe component that rotates based on location prop
 function Globe({ location }: { location: Location }) {
@@ -43,9 +24,6 @@ function Globe({ location }: { location: Location }) {
       const x = -Math.sin(phi) * Math.cos(theta);
       const y = Math.cos(phi);
       const z = Math.sin(phi) * Math.sin(theta);
-
-      // Create a target vector for the camera to look at
-      const targetVector = new THREE.Vector3(x, y, z);
 
       // Animate the rotation using gsap
       gsap.to(meshRef.current.rotation, {
@@ -66,48 +44,21 @@ function Globe({ location }: { location: Location }) {
 }
 
 export default function Home() {
-  const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [location, setLocation] = useState<Location>({ lat: 37.5665, lng: 126.9780 });
+  const { weatherData, loading, error, location, setLocation } = useWeather({ lat: 37.5665, lng: 126.9780 });
+  const [showWeatherCard, setShowWeatherCard] = useState(true);
 
   const mapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
-  const fetchWeather = async (lat: number, lon: number) => {
-    setLoading(true);
-    setError(null);
-    // Keep previous weather data until new data is fetched
-
-    const apiKey = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY;
-    if (!apiKey) {
-      setError('OpenWeather API key is not configured.');
-      setLoading(false);
-      return;
-    }
-
-    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
-
-    try {
-      const response = await fetch(url);
-      if (!response.ok) throw new Error('Failed to fetch weather data.');
-      const data = await response.json();
-      setWeatherData(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchWeather(location.lat, location.lng);
-  }, []);
+    if (weatherData) {
+      setShowWeatherCard(true);
+    }
+  }, [weatherData]);
 
   const handleMapClick = (event: MapMouseEvent) => {
     if (event.detail.latLng) {
       const newLocation = event.detail.latLng;
       setLocation(newLocation);
-      fetchWeather(newLocation.lat, newLocation.lng);
     }
   };
 
@@ -161,13 +112,13 @@ export default function Home() {
 
         <div className="absolute top-0 right-0 bottom-0 left-0 flex items-center justify-center pointer-events-none">
           <div className="pointer-events-auto">
-                        {loading && (
+            {loading && (
               <div className="flex items-center justify-center space-x-2 text-white text-xl">
                 <div className="w-24 h-24 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               </div>
             )}
             {error && <div className="bg-red-500/20 text-red-300 p-4 rounded-lg">Error: {error}</div>}
-            {weatherData && !loading && <WeatherCard weather={weatherData} onClose={() => setWeatherData(null)} />}
+            {weatherData && !loading && showWeatherCard && <WeatherCard weather={weatherData} onClose={() => setShowWeatherCard(false)} />}
           </div>
         </div>
       </div>
